@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: whecko-configmap
+data:
+  RUST_LOG: info
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: whecko
+  labels:
+    app.kubernetes.io/name: whecko
+    app.kubernetes.io/part-of: whecko-0.1.1
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: whecko 
+      app.kubernetes.io/instance: whecko-0.1.1
+  template:
+    metadata:
+      #annotations:
+      #  ad.datadoghq.com/whecko.logs: ''
+      labels:
+        app.kubernetes.io/name: whecko 
+        app.kubernetes.io/instance: whecko-0.1.1
+        app.kubernetes.io/part-of: whecko-0.1.1
+    spec:
+      containers:
+      - name: whecko
+        image: "caspeco.azurecr.io/checkout/whecko:0.1.1"
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: whecko-configmap
+        ports:
+        - containerPort: 8000
+        resources:
+          limits:
+              cpu: 50m
+              memory: 128Mi
+          requests:
+              cpu: 25m
+              memory: 64Mi
+          
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: whecko
+  labels:
+    app.kubernetes.io/name: whecko
+    app.kubernetes.io/instance: whecko-0.1.1
+    app.kubernetes.io/part-of: whecko-0.1.1
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8000
+    protocol: TCP
+    name: http
+  selector:
+    app.kubernetes.io/name: whecko
+    app.kubernetes.io/instance: whecko-0.1.1
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: whecko
+  labels:
+    app.kubernetes.io/name: whecko 
+    app.kubernetes.io/part-of: whecko-0.1.1
+spec:
+  rules:
+  - host: wild-whecko.checkout.caspeco.se
+    http:
+      paths:
+      - backend:
+          serviceName: whecko
+          servicePort: 80
+        path: /
+  tls:
+  - secretName: wildcard-checkout.caspeco.se-tls
+    hosts:
+    - wild-whecko.checkout.caspeco.se

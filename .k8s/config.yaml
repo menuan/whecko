@@ -1,0 +1,25 @@
+containers:
+  image: caspeco.azurecr.io/checkout/whecko
+  tag: 0.1.1
+  imagePullPolicy: Always
+  resources:
+    limits:
+      cpu: 50m
+      memory: 128Mi
+    requests:
+      cpu: 25m
+      memory: 64Mi
+      
+service:
+  port: 80
+  targetPort: 8000
+
+ingress:
+  enabled: true
+  tls:
+    host: wild-whecko.checkout.caspeco.se
+    secretName: wildcard-checkout.caspeco.se-tls
+  
+rust:
+  logEnv: "info"
+
