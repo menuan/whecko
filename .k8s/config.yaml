@@ -5,9 +5,9 @@ containers:
   resources:
     limits:
       cpu: 50m
-      memory: 128Mi
+      memory: 64Mi
     requests:
-      cpu: 25m
+      cpu: 50m
       memory: 64Mi
       
 service:
@@ -17,8 +17,8 @@ service:
 ingress:
   enabled: true
   tls:
-    host: wild-whecko.checkout.caspeco.se
-    secretName: wildcard-checkout.caspeco.se-tls
+    host: somehost
+    secretName: somesecret
   
 rust:
   logEnv: "info"
