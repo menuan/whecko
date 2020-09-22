@@ -1,6 +1,6 @@
 containers:
-  image: caspeco.azurecr.io/checkout/whecko
-  tag: 0.1.1
+  image: menuan.azurecr.io/whecko
+  tag: 0.1.2
   imagePullPolicy: Always
   resources:
     limits:

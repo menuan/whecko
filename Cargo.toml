@@ -1,6 +1,6 @@
 [package]
 name = "whecko"
-version = "0.1.1"
+version = "0.1.3"
 authors = ["Simon Bergström <simon@menuan.se>"]
 edition = "2018"
 
@@ -10,3 +10,4 @@ edition = "2018"
 actix-web = '1.0'
 log = '0.4.8'
 env_logger = '0.6.2'
+rand = '0.7.3'
